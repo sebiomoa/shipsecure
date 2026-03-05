@@ -274,6 +274,87 @@ function installFromZip(zipPath, outputDir, force) {
 }
 
 // ============================================================
+// Agent instruction files — tell AI agents to read policy files
+// ============================================================
+const AGENT_INSTRUCTION = `# Security Policies — MUST READ
+
+This project uses ShipSecure security policies. Before writing or modifying code, you MUST read and follow every policy file that exists in this repository.
+
+## Policy Files
+
+Read each of these files if they exist before making changes:
+
+### Core
+- SECURITY.md — Secrets management, attack surface, enforced architecture
+- AUTH.md — Token handling, session rules, password policy, roles
+- API.md — Input validation, rate limiting, error handling
+
+### Extended
+- DATABASE.md — Query safety, access control, migrations
+- ENV_VARIABLES.md — Environment variable handling, secret rotation
+- DEPLOYMENT.md — Deploy pipeline, environment isolation
+- INCIDENT_RESPONSE.md — Breach response, escalation procedures
+- ACCESS_CONTROL.md — Role-based access, permission boundaries
+- DATA_PRIVACY.md — PII handling, data retention, GDPR compliance
+- PAYMENTS.md — Payment processing, PCI compliance
+- FILE_UPLOADS.md — Upload validation, storage security
+- RATE_LIMITING.md — Throttling, abuse prevention
+- THIRD_PARTY.md — Dependency security, vendor risk
+- LOGGING_PII.md — Log sanitization, PII redaction
+- TESTING.md — Security test requirements
+- OBSERVABILITY.md — Monitoring, alerting, audit trails
+- THREAT_MODEL.md — Known threats and mitigations
+- PR_CHECKLIST.md — Pre-merge security checklist
+- CONTRIBUTING_SECURITY.md — Security contribution guidelines
+- VULNERABILITY_REPORTING.md — Responsible disclosure process
+- POLICY_INDEX.md — Index of all policies
+- FULL_AUDIT_CHECKLIST.md — 100+ point security audit checklist
+
+### Stack Presets
+- supabase-preset/ — Supabase-specific security rules (if present)
+- firebase-preset/ — Firebase-specific security rules (if present)
+
+## Rules
+
+1. Always check policy files before writing code — if your task touches auth, APIs, database, payments, file uploads, or any area with a policy file, read that file first.
+2. Never violate a policy — if a policy says "never do X", do not do X. Flag it if unsure.
+3. Secrets are never hardcoded — no API keys, tokens, passwords, or credentials in source code.
+4. Validate all input — every endpoint, every form, every external data source.
+5. Follow the principle of least privilege — only request the permissions you need.
+`;
+
+function writeAgentFiles(outputDir, force) {
+  const agentFiles = [
+    { path: "CLAUDE.md", name: "Claude" },
+    { path: ".cursorrules", name: "Cursor" },
+    { path: ".github/copilot-instructions.md", name: "GitHub Copilot" },
+    { path: ".windsurfrules", name: "Windsurf" },
+    { path: ".clinerules", name: "Cline" },
+  ];
+
+  let written = 0;
+  let skipped = 0;
+
+  console.log("\n  Agent instructions:");
+  agentFiles.forEach(({ path: filePath, name }) => {
+    const fullPath = path.join(outputDir, filePath);
+    const dir = path.dirname(fullPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+    if (fs.existsSync(fullPath) && !force) {
+      console.log(`    [skip] ${filePath} (${name}) — use --force to overwrite`);
+      skipped++;
+    } else {
+      fs.writeFileSync(fullPath, AGENT_INSTRUCTION);
+      console.log(`    [done] ${filePath} (${name})`);
+      written++;
+    }
+  });
+
+  return { written, skipped };
+}
+
+// ============================================================
 // INIT — install templates (free, or free + pro with --key)
 // ============================================================
 async function init() {
@@ -307,8 +388,11 @@ async function init() {
       await downloadProZip(zipPath, licenseKey);
       const proResult = installFromZip(zipPath, outputDir, force);
 
-      const totalCopied = freeResult.copied + proResult.copied;
-      const totalSkipped = freeResult.skipped + proResult.skipped;
+      // Write agent instruction files
+      const agentResult = writeAgentFiles(outputDir, force);
+
+      const totalCopied = freeResult.copied + proResult.copied + agentResult.written;
+      const totalSkipped = freeResult.skipped + proResult.skipped + agentResult.skipped;
 
       console.log(`\n  Done! ${totalCopied} files installed, ${totalSkipped} skipped.`);
       console.log("\n  Next steps:");
@@ -330,7 +414,13 @@ async function init() {
     console.log("  Free templates:");
     const result = copyFiles(FREE_DIR, outputDir, force);
 
-    console.log(`\n  Done! ${result.copied} files added, ${result.skipped} skipped.`);
+    // Write agent instruction files
+    const agentResult = writeAgentFiles(outputDir, force);
+
+    const totalCopied = result.copied + agentResult.written;
+    const totalSkipped = result.skipped + agentResult.skipped;
+
+    console.log(`\n  Done! ${totalCopied} files added, ${totalSkipped} skipped.`);
     console.log("\n  Next steps:");
     console.log("    1. Customize the templates for your project");
     console.log("    2. Run: npx secure-repo audit");
@@ -374,9 +464,10 @@ function importPack() {
 
   try {
     const proResult = installFromZip(resolvedPath, outputDir, force);
+    const agentResult = writeAgentFiles(outputDir, force);
 
-    const totalCopied = freeResult.copied + proResult.copied;
-    const totalSkipped = freeResult.skipped + proResult.skipped;
+    const totalCopied = freeResult.copied + proResult.copied + agentResult.written;
+    const totalSkipped = freeResult.skipped + proResult.skipped + agentResult.skipped;
 
     console.log(`\n  Done! ${totalCopied} files imported, ${totalSkipped} skipped.\n`);
   } catch (err) {
