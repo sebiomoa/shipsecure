@@ -31,7 +31,7 @@ const DANGER_PATTERNS = [
   { pattern: /sk_live_[a-zA-Z0-9]+/, label: "Stripe live secret key" },
   { pattern: /sk_test_[a-zA-Z0-9]+/, label: "Stripe test secret key" },
   { pattern: /eyJ[a-zA-Z0-9_-]+\.eyJ[a-zA-Z0-9_-]+/, label: "JWT token" },
-  { pattern: /SUPABASE_SERVICE_ROLE_KEY/, label: "Supabase service role key reference" },
+  { pattern: /SUPABASE_SERVICE_ROLE_KEY\s*[:=]\s*['"][^'"]+['"]/, label: "Hardcoded Supabase service role key" },
   { pattern: /password\s*[:=]\s*['"][^'"]+['"]/, label: "Hardcoded password" },
   { pattern: /api[_-]?key\s*[:=]\s*['"][^'"]+['"]/, label: "Hardcoded API key" },
 ];
