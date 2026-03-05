@@ -393,6 +393,19 @@ function audit() {
   let issues = 0;
   let warnings = 0;
   let passed = 0;
+  let score = 0;
+
+  // Score weights (total = 100)
+  const SCORE_WEIGHTS = {
+    policyHigh: 10,    // 4 high-severity files × 10 = 40
+    policyMedium: 5,   // 3 medium-severity files × 5 = 15
+    gitignoreEnv: 10,  // .env in .gitignore
+    noEnvFiles: 10,    // no committed .env files
+    envExample: 5,     // .env.example exists
+    noSecrets: 10,     // no hardcoded secrets
+    noInsecureUrls: 5, // no http:// in env example
+    lockFile: 5,       // dependency lock file
+  };
 
   // --- Check for recommended files ---
   console.log("  Policy files:");
@@ -401,6 +414,7 @@ function audit() {
     if (fs.existsSync(filePath)) {
       console.log(`    [pass] ${file}`);
       passed++;
+      score += severity === "high" ? SCORE_WEIGHTS.policyHigh : SCORE_WEIGHTS.policyMedium;
     } else if (severity === "high") {
       console.log(`    [FAIL] ${file} — missing (high priority)`);
       issues++;
@@ -418,6 +432,7 @@ function audit() {
     if (gitignore.includes(".env")) {
       console.log("    [pass] .env is in .gitignore");
       passed++;
+      score += SCORE_WEIGHTS.gitignoreEnv;
     } else {
       console.log("    [FAIL] .env is NOT in .gitignore");
       issues++;
@@ -429,19 +444,25 @@ function audit() {
 
   // --- Check for committed .env files ---
   const envFiles = [".env", ".env.local", ".env.production"];
+  let envFilesFound = 0;
   envFiles.forEach((envFile) => {
     const envPath = path.join(targetDir, envFile);
     if (fs.existsSync(envPath)) {
       console.log(`    [FAIL] ${envFile} exists in repo — may contain secrets`);
       issues++;
+      envFilesFound++;
     }
   });
+  if (envFilesFound === 0) {
+    score += SCORE_WEIGHTS.noEnvFiles;
+  }
 
   // --- Check for .env.example ---
   const envExamplePath = path.join(targetDir, ".env.example");
   if (fs.existsSync(envExamplePath)) {
     console.log("    [pass] .env.example exists");
     passed++;
+    score += SCORE_WEIGHTS.envExample;
   } else {
     console.log("    [warn] .env.example missing — document required env vars");
     warnings++;
@@ -487,6 +508,7 @@ function audit() {
   if (secretsFound === 0) {
     console.log("    [pass] No obvious secrets found in source files");
     passed++;
+    score += SCORE_WEIGHTS.noSecrets;
   }
 
   // --- Check for HTTPS enforcement (look for http:// in env example) ---
@@ -499,6 +521,7 @@ function audit() {
     } else {
       console.log("    [pass] No insecure URLs in .env.example");
       passed++;
+      score += SCORE_WEIGHTS.noInsecureUrls;
     }
   }
 
@@ -508,15 +531,19 @@ function audit() {
   if (hasLockFile) {
     console.log("    [pass] Dependency lock file exists");
     passed++;
+    score += SCORE_WEIGHTS.lockFile;
   } else if (fs.existsSync(path.join(targetDir, "package.json"))) {
     console.log("    [warn] No lock file found — pin your dependencies");
     warnings++;
   }
 
+  // --- Security Score ---
+  console.log("\n  ════════════════════════════════════");
+  console.log(`  Security Score: ${score} / 100`);
+  console.log("  ════════════════════════════════════");
+
   // --- Summary ---
-  console.log("\n  ────────────────────────────────────");
-  console.log(`  Results: ${passed} passed, ${warnings} warnings, ${issues} issues`);
-  console.log("  ────────────────────────────────────");
+  console.log(`\n  Results: ${passed} passed, ${warnings} warnings, ${issues} issues`);
 
   if (issues > 0) {
     console.log(`\n  ${issues} issue(s) found. Fix these before shipping.`);
