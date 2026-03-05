@@ -59,7 +59,7 @@ function printHelp() {
     AUTH.md        Token handling, session rules, password policy, roles
     API.md         Input validation, rate limiting, error handling
 
-  Pro templates (purchase at https://polar.sh/third-space-labs):
+  Pro templates (purchase at https://buy.polar.sh/polar_cl_q7Wa3Gcng42437OoTx4wHVNyMMyYv0WbtobUv145EZH):
     30 additional files — templates, audit checklist, stack presets, examples
     Install with: npx secure-repo init --key <your-license-key>
   `);
@@ -92,7 +92,7 @@ function listTemplates() {
   console.log("    next-route-handler.ts, rate-limit.ts, zod-validate.ts");
   console.log("    supabase-rls.sql, firebase-rules.txt");
 
-  console.log("\n  Get pro: https://polar.sh/third-space-labs\n");
+  console.log("\n  Get pro: https://buy.polar.sh/polar_cl_q7Wa3Gcng42437OoTx4wHVNyMMyYv0WbtobUv145EZH\n");
 }
 
 function getArg(flag) {
@@ -287,7 +287,7 @@ async function init() {
       console.log("  License valid!\n");
     } catch (err) {
       console.log(`\n  License verification failed: ${err.message}`);
-      console.log("  Purchase at: https://polar.sh/third-space-labs\n");
+      console.log("  Purchase at: https://buy.polar.sh/polar_cl_q7Wa3Gcng42437OoTx4wHVNyMMyYv0WbtobUv145EZH\n");
       process.exit(1);
     }
 
@@ -331,7 +331,7 @@ async function init() {
     console.log("    1. Customize the templates for your project");
     console.log("    2. Run: npx secure-repo audit");
     console.log("    3. Get pro templates: npx secure-repo init --key <your-key>");
-    console.log("       Purchase at: https://polar.sh/third-space-labs");
+    console.log("       Purchase at: https://buy.polar.sh/polar_cl_q7Wa3Gcng42437OoTx4wHVNyMMyYv0WbtobUv145EZH");
     console.log();
   }
 }
@@ -345,7 +345,7 @@ function importPack() {
   if (!zipPath) {
     console.log("\n  Usage: npx secure-repo import <path-to-zip>\n");
     console.log("  Offline alternative to: npx secure-repo init --key <key>");
-    console.log("  Get the pro pack at: https://polar.sh/third-space-labs\n");
+    console.log("  Get the pro pack at: https://buy.polar.sh/polar_cl_q7Wa3Gcng42437OoTx4wHVNyMMyYv0WbtobUv145EZH\n");
     return;
   }
 
