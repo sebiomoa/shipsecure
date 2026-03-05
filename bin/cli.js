@@ -24,7 +24,6 @@ const RECOMMENDED_FILES = [
   { file: "DEPLOYMENT.md", category: "operations", severity: "medium" },
   { file: "INCIDENT_RESPONSE.md", category: "operations", severity: "medium" },
   { file: "ENV_VARIABLES.md", category: "security", severity: "high" },
-  { file: "CONTRIBUTING.md", category: "process", severity: "low" },
 ];
 
 // Known dangerous patterns to scan for
