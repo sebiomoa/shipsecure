@@ -39,16 +39,16 @@ const DANGER_PATTERNS = [
 
 function printHelp() {
   console.log(`
-  shipsecure - Production-grade security standards for your repo
+  secure-repo - Production-grade security standards for your repo
 
   Usage:
-    npx github:sebiomoa/shipsecure init              Add free security templates
-    npx github:sebiomoa/shipsecure init --key <key>  Add free + pro templates (requires license key)
-    npx github:sebiomoa/shipsecure audit             Scan your repo for security issues
-    npx github:sebiomoa/shipsecure import <file>     Import pro templates from a zip file (offline)
-    npx github:sebiomoa/shipsecure check             Check which templates are outdated
-    npx github:sebiomoa/shipsecure list              Show available free templates
-    npx github:sebiomoa/shipsecure upgrade            See what's in the pro pack
+    npx secure-repo init              Add free security templates
+    npx secure-repo init --key <key>  Add free + pro templates (requires license key)
+    npx secure-repo audit             Scan your repo for security issues
+    npx secure-repo import <file>     Import pro templates from a zip file (offline)
+    npx secure-repo check             Check which templates are outdated
+    npx secure-repo list              Show available free templates
+    npx secure-repo upgrade            See what's in the pro pack
 
   Options:
     --key      Your license key (from purchase)
@@ -62,7 +62,7 @@ function printHelp() {
 
   Pro templates (purchase at https://buy.polar.sh/polar_cl_q7Wa3Gcng42437OoTx4wHVNyMMyYv0WbtobUv145EZH):
     30 additional files — templates, audit checklist, stack presets, examples
-    Install with: npx github:sebiomoa/shipsecure init --key <your-license-key>
+    Install with: npx secure-repo init --key <your-license-key>
   `);
 }
 
@@ -280,7 +280,7 @@ async function init() {
 
   if (licenseKey) {
     // Pro install: verify key, download, extract
-    console.log("\n  shipsecure - Installing pro templates\n");
+    console.log("\n  secure-repo - Installing pro templates\n");
     console.log("  Verifying license key...");
 
     try {
@@ -310,11 +310,11 @@ async function init() {
       console.log(`\n  Done! ${totalCopied} files installed, ${totalSkipped} skipped.`);
       console.log("\n  Next steps:");
       console.log("    1. Customize the templates for your project");
-      console.log("    2. Run: npx github:sebiomoa/shipsecure audit");
+      console.log("    2. Run: npx secure-repo audit");
       console.log();
     } catch (err) {
       console.log(`\n  Download failed: ${err.message}`);
-      console.log("  Try offline install: npx github:sebiomoa/shipsecure import <zip-file>\n");
+      console.log("  Try offline install: npx secure-repo import <zip-file>\n");
       process.exit(1);
     } finally {
       // Clean up downloaded zip
@@ -322,7 +322,7 @@ async function init() {
     }
   } else {
     // Free install
-    console.log("\n  shipsecure - Adding production standards to your project\n");
+    console.log("\n  secure-repo - Adding production standards to your project\n");
 
     console.log("  Free templates:");
     const result = copyFiles(FREE_DIR, outputDir, force);
@@ -330,11 +330,11 @@ async function init() {
     console.log(`\n  Done! ${result.copied} files added, ${result.skipped} skipped.`);
     console.log("\n  Next steps:");
     console.log("    1. Customize the templates for your project");
-    console.log("    2. Run: npx github:sebiomoa/shipsecure audit");
+    console.log("    2. Run: npx secure-repo audit");
     console.log("\n  ────────────────────────────────────");
     console.log("  Want 27 more files? Database, deployment, incident response,");
     console.log("  payments, access control, 100+ point audit checklist & more.");
-    console.log("\n  Run: npx github:sebiomoa/shipsecure upgrade");
+    console.log("\n  Run: npx secure-repo upgrade");
     console.log("  ────────────────────────────────────");
     console.log();
   }
@@ -347,8 +347,8 @@ function importPack() {
   const zipPath = args[1];
 
   if (!zipPath) {
-    console.log("\n  Usage: npx github:sebiomoa/shipsecure import <path-to-zip>\n");
-    console.log("  Offline alternative to: npx github:sebiomoa/shipsecure init --key <key>");
+    console.log("\n  Usage: npx secure-repo import <path-to-zip>\n");
+    console.log("  Offline alternative to: npx secure-repo init --key <key>");
     console.log("  Get the pro pack at: https://buy.polar.sh/polar_cl_q7Wa3Gcng42437OoTx4wHVNyMMyYv0WbtobUv145EZH\n");
     return;
   }
@@ -363,7 +363,7 @@ function importPack() {
   const force = args.includes("--force");
   const outputDir = getArg("--output") || process.cwd();
 
-  console.log("\n  shipsecure - Importing pro templates\n");
+  console.log("\n  secure-repo - Importing pro templates\n");
 
   // Install free templates too
   console.log("  Free templates:");
@@ -388,7 +388,7 @@ function importPack() {
 function audit() {
   const targetDir = getArg("--output") || process.cwd();
 
-  console.log("\n  shipsecure audit\n");
+  console.log("\n  secure-repo audit\n");
   console.log("  Scanning repository for security issues...\n");
 
   let issues = 0;
@@ -521,7 +521,7 @@ function audit() {
 
   if (issues > 0) {
     console.log(`\n  ${issues} issue(s) found. Fix these before shipping.`);
-    console.log("  Run: npx github:sebiomoa/shipsecure init    (adds missing policy files)");
+    console.log("  Run: npx secure-repo init    (adds missing policy files)");
   } else if (warnings > 0) {
     console.log("\n  No critical issues. Some improvements recommended.");
   } else {
@@ -537,7 +537,7 @@ function audit() {
     console.log("\n  ────────────────────────────────────");
     console.log(`  Want deeper coverage? The pro pack adds ${missingProFiles.length} more policy files:`);
     console.log(`    ${missingProFiles.slice(0, 4).join(", ")}${missingProFiles.length > 4 ? `, +${missingProFiles.length - 4} more` : ""}`);
-    console.log("  Run: npx github:sebiomoa/shipsecure upgrade");
+    console.log("  Run: npx secure-repo upgrade");
   }
 
   console.log();
@@ -580,7 +580,7 @@ function check() {
 // ============================================================
 function upgrade() {
   console.log(`
-  shipsecure pro — 27 additional files for complete coverage
+  secure-repo pro — 27 additional files for complete coverage
 
   What's included:
     18 policy templates   DATABASE.md, DEPLOYMENT.md, INCIDENT_RESPONSE.md,
@@ -603,7 +603,7 @@ function upgrade() {
   https://buy.polar.sh/polar_cl_q7Wa3Gcng42437OoTx4wHVNyMMyYv0WbtobUv145EZH
 
   After purchase, install with:
-  npx github:sebiomoa/shipsecure init --key <your-license-key>
+  npx secure-repo init --key <your-license-key>
   ────────────────────────────────────
   `);
 }

@@ -5,7 +5,7 @@
 **Drop production-grade security standards into any repository in 30 seconds.**
 
 ```bash
-npx github:sebiomoa/shipsecure init
+npx secure-repo init
 ```
 
 That's it. Your repo now has battle-tested security policies, checklists, and enforcement rules used in real production SaaS applications.
@@ -17,7 +17,7 @@ That's it. Your repo now has battle-tested security policies, checklists, and en
 Not sure where you stand? Run an instant security audit:
 
 ```bash
-npx github:sebiomoa/shipsecure audit
+npx secure-repo audit
 ```
 
 ```
@@ -44,14 +44,14 @@ npx github:sebiomoa/shipsecure audit
   ────────────────────────────────────
 
   3 issue(s) found. Fix these before shipping.
-  Run: npx github:sebiomoa/shipsecure init
+  Run: npx secure-repo init
 ```
 
 Zero setup. Zero dependencies. Just run it.
 
 **Don't use the terminal?** Just tell your AI agent:
 
-> Run `npx github:sebiomoa/shipsecure audit` in my project
+> Run `npx secure-repo audit` in my project
 
 Works with Cursor, Claude Code, Windsurf, Copilot — any AI coding agent that can run commands.
 
@@ -69,7 +69,7 @@ You're building a SaaS app. You know you should have security policies, but:
 ## The Solution
 
 ```bash
-npx github:sebiomoa/shipsecure init
+npx secure-repo init
 ```
 
 ```
@@ -157,7 +157,7 @@ Each file includes:
 After purchase, install with one command:
 
 ```bash
-npx github:sebiomoa/shipsecure init --key <your-license-key>
+npx secure-repo init --key <your-license-key>
 ```
 
 ---
@@ -165,13 +165,13 @@ npx github:sebiomoa/shipsecure init --key <your-license-key>
 ## Commands
 
 ```bash
-npx github:sebiomoa/shipsecure init              # Add free security templates
-npx github:sebiomoa/shipsecure init --key <key>  # Add free + pro templates (with license key)
-npx github:sebiomoa/shipsecure audit             # Scan your repo for security issues
-npx github:sebiomoa/shipsecure upgrade           # See what's in the pro pack
-npx github:sebiomoa/shipsecure import <zip>      # Import pro templates from zip (offline)
-npx github:sebiomoa/shipsecure check             # Check if your templates are outdated
-npx github:sebiomoa/shipsecure list              # Show all available templates
+npx secure-repo init              # Add free security templates
+npx secure-repo init --key <key>  # Add free + pro templates (with license key)
+npx secure-repo audit             # Scan your repo for security issues
+npx secure-repo upgrade           # See what's in the pro pack
+npx secure-repo import <zip>      # Import pro templates from zip (offline)
+npx secure-repo check             # Check if your templates are outdated
+npx secure-repo list              # Show all available templates
 ```
 
 ---
