@@ -1,6 +1,6 @@
 {
   "name": "secure-repo",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Drop production-grade security standards into any repo. Audit your repo for security issues. Templates for AI-assisted development.",
   "bin": {
     "secure-repo": "./bin/cli.js"
@@ -24,6 +24,11 @@
   ],
   "author": "sebiomoa",
   "license": "MIT",
+  "homepage": "https://shipsecure.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sebiomoa/shipsecure"
+  },
   "files": [
     "bin/",
     "templates/free/"
