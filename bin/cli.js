@@ -8,8 +8,7 @@ const { execSync } = require("child_process");
 const TEMPLATES_DIR = path.join(__dirname, "..", "templates");
 const FREE_DIR = path.join(TEMPLATES_DIR, "free");
 
-// TODO: Replace with your Polar organization ID after creating the product
-const POLAR_ORGANIZATION_ID = "";
+const POLAR_ORGANIZATION_ID = "f2fdb373-79d2-431b-848a-a5d697a29561";
 
 const PRO_ZIP_URL = "https://github.com/sebiomoa/secure-repo/releases/latest/download/secure-repo-pro.zip";
 
